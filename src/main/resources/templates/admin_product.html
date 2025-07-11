@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin - Product Management</title>
+</head>
+<body>
+  <h2>Product List</h2>
+  <table border="1" id="product-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Price</th>
+      </tr>
+    </thead>
+    <tbody id="product-body"></tbody>
+  </table>
+
+  <h3>Add New Product</h3>
+  <form id="add-product-form">
+    <input type="text" id="name" placeholder="Product Name" required />
+    <input type="text" id="description" placeholder="Description" required />
+    <input type="number" id="price" placeholder="Price" step="0.01" required />
+    <button type="submit">Add</button>
+  </form>
+
+  <p id="message"></p>
+
+  <script>
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("Access denied! Please log in first.");
+      window.location.href = "/login";
+    }
+
+    const loadProducts = async () => {
+      const response = await fetch("http://localhost:8081/api/admin/products", {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
+      const products = await response.json();
+      const tbody = document.getElementById("product-body");
+      tbody.innerHTML = "";
+      products.forEach((p) => {
+        const row = `<tr>
+          <td>${p.id}</td>
+          <td>${p.name}</td>
+          <td>${p.description}</td>
+          <td>${p.price}</td>
+        </tr>`;
+        tbody.innerHTML += row;
+      });
+    };
+
+    document.getElementById("add-product-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const description = document.getElementById("description").value;
+      const price = parseFloat(document.getElementById("price").value);
+
+      const response = await fetch("http://localhost:8081/api/admin/products/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify({ name, description, price }),
+      });
+
+      const message = document.getElementById("message");
+
+      if (response.ok) {
+        message.textContent = "Product added successfully.";
+        loadProducts();
+      } else {
+        message.textContent = "Failed to add product.";
+      }
+    });
+
+    loadProducts();
+  </script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Panel</title>
+</head>
+<body>
+  <h2>Welcome to the Admin Panel</h2>
+  <p>Select a section to manage:</p>
+
+  <ul>
+    <li><a href="/admin/products">Product Management</a></li>
+    <li><a href="/admin/categories">Category Management</a></li>
+    <li><a href="/admin/users">User Management</a></li>
+    <li><a href="/admin/orders">Order Management</a></li>
+  </ul>
+
+  <button onclick="logout()">Logout</button>
+
+  <script>
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Unauthorized access. Please log in.");
+      window.location.href = "/login";
+    }
+
+    function logout() {
+      localStorage.removeItem("token");
+      window.location.href = "/login";
+    }
+  </script>
+</body>
+</html>
