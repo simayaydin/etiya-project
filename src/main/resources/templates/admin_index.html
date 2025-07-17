@@ -2,20 +2,101 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Admin Panel</title>
+  <title>Admin Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f8;
+    }
+
+    header {
+      background-color: #007bff;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .container {
+      padding: 40px;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background-color: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: transform 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card a {
+      text-decoration: none;
+      color: #333;
+      font-size: 18px;
+      display: block;
+      margin-top: 10px;
+    }
+
+    .logout-btn {
+      margin-top: 40px;
+      padding: 12px 20px;
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .logout-btn:hover {
+      background-color: #c82333;
+    }
+  </style>
 </head>
 <body>
-  <h2>Welcome to the Admin Panel</h2>
-  <p>Select a section to manage:</p>
 
-  <ul>
-    <li><a href="/admin/products">Product Management</a></li>
-    <li><a href="/admin/categories">Category Management</a></li>
-    <li><a href="/admin/users">User Management</a></li>
-    <li><a href="/admin/orders">Order Management</a></li>
-  </ul>
+  <header>
+    <h1>Admin Panel</h1>
+    <p>Welcome! Select a section to manage below.</p>
+  </header>
 
-  <button onclick="logout()">Logout</button>
+  <div class="container">
+    <div class="cards">
+      <div class="card">
+        <img src="https://img.icons8.com/ios-filled/50/000000/product.png" alt="Products" />
+        <a href="/admin/products">Product Management</a>
+      </div>
+      <div class="card">
+        <img src="https://img.icons8.com/ios-filled/50/000000/opened-folder.png" alt="Categories" />
+        <a href="/admin/categories">Category Management</a>
+      </div>
+      <div class="card">
+        <img src="https://img.icons8.com/ios-filled/50/000000/user-group-man-man.png" alt="Users" />
+        <a href="/admin/users">User Management</a>
+      </div>
+      <div class="card">
+        <img src="https://img.icons8.com/ios-filled/50/000000/shopping-cart.png" alt="Orders" />
+        <a href="/admin/orders">Order Management</a>
+      </div>
+    </div>
+
+    <div style="text-align: center;">
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </div>
 
   <script>
     const token = localStorage.getItem("token");
@@ -29,5 +110,6 @@
       window.location.href = "/login";
     }
   </script>
+
 </body>
 </html>

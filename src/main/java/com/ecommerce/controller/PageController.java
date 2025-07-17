@@ -25,4 +25,15 @@ public class PageController {
     public String adminProductPage() {
         return "admin_product"; 
     }
+    @GetMapping("/forgot_password")
+    public String forgotPasswordPage() {
+    return "forgot_password"; 
+    }
+
+    @GetMapping("/admin/users")
+    public String adminUserPage() {
+    return "admin_users";
+    }
+
+
 }

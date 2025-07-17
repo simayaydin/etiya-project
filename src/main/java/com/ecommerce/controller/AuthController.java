@@ -12,6 +12,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
 
@@ -24,6 +26,8 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
+    private static final Logger logger = LogManager.getLogger(AuthController.class);
+
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
@@ -43,6 +47,8 @@ public class AuthController {
     String password = loginData.get("password");
 
     System.out.println(">> Login endpoint hit by: " + username);
+    logger.info("User logged in: {}", username);
+
 
     try {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));

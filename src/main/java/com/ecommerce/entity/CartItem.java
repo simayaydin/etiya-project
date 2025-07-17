@@ -17,11 +17,11 @@ public class CartItem {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "cart_id")
+    @JoinColumn(name = "cart_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Cart cart;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Product product;
 
     private int quantity;

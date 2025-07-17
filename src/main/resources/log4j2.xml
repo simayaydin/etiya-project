@@ -1,0 +1,23 @@
+<Configuration status="WARN">
+    <Appenders>
+        <Console name="ConsoleAppender" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"/>
+        </Console>
+        <File name="UserLogFile" fileName="logs/user-actions.log" append="true">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"/>
+        </File>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="com.ecommerce.controller.AuthController" level="info" additivity="false">
+            <AppenderRef ref="UserLogFile"/>
+        </Logger>
+        <Logger name="com.ecommerce.controller.PasswordResetController" level="info" additivity="false">
+            <AppenderRef ref="UserLogFile"/>
+        </Logger>
+
+        <Root level="info">
+            <AppenderRef ref="ConsoleAppender"/>
+        </Root>
+    </Loggers>
+</Configuration>

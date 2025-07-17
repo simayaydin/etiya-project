@@ -14,8 +14,8 @@ public class EmailService {
     public void sendPasswordResetEmail(String to, String temporaryPassword) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
-        message.setSubject("Şifrenizi Sıfırlayın");
-        message.setText("Geçici şifreniz: " + temporaryPassword +
+        message.setSubject("Reset your password");
+        message.setText("Temporary password: " + temporaryPassword +
                 "\nLütfen giriş yaptıktan sonra şifrenizi değiştirin.");
 
         mailSender.send(message);

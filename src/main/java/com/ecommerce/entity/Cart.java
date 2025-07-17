@@ -16,9 +16,10 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @OneToOne
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private User user;
+
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
     private List<CartItem> cartItems;

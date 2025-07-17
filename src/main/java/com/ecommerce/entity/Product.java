@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Product {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,10 +26,6 @@ public class Product {
     private int stock;
 
     private String imageUrl;
-
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
 
     private LocalDateTime createdAt;
 

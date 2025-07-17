@@ -34,6 +34,7 @@ public class PasswordResetController {
 
     private static final Logger logger = LogManager.getLogger(PasswordResetController.class);
 
+
     @PostMapping("/forgot-password")
     public ResponseEntity<String> forgotPassword(@RequestParam String email) {
         Optional<User> userOpt = userRepository.findByEmail(email);
@@ -56,7 +57,7 @@ public class PasswordResetController {
         emailService.sendPasswordResetEmail(user.getEmail(), temporaryPassword);
 
         // Log to DB
-        UserLog log = new UserLog(user.getEmail(), "PASSWORD_RESET", LocalDateTime.now());
+        UserLog log = new UserLog(user.getUsername(), user.getEmail(), "PASSWORD_RESET", LocalDateTime.now());
         userLogRepository.save(log);
 
         // Log to log4j
