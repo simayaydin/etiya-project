@@ -40,5 +40,26 @@
       }
     });
   </script>
+  <form id="resetForm">
+  <input type="email" name="email" placeholder="Enter your email" required />
+  <button type="submit">Reset Password</button>
+</form>
+
+<script>
+document.getElementById("resetForm").addEventListener("submit", async function(e) {
+  e.preventDefault();
+  const email = this.email.value;
+
+  const response = await fetch("/api/auth/forgot-password", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({ email })
+  });
+
+  const result = await response.text();
+  alert(result);
+});
+</script>
+
 </body>
 </html>
