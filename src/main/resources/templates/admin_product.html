@@ -13,6 +13,7 @@
         <th>Name</th>
         <th>Description</th>
         <th>Price</th>
+        <th>Image</th>
       </tr>
     </thead>
     <tbody id="product-body"></tbody>
@@ -23,6 +24,7 @@
     <input type="text" id="name" placeholder="Product Name" required />
     <input type="text" id="description" placeholder="Description" required />
     <input type="number" id="price" placeholder="Price" step="0.01" required />
+    <input type="file" id="image" accept="image/*" required />
     <button type="submit">Add</button>
   </form>
 
@@ -42,15 +44,22 @@
           Authorization: "Bearer " + token,
         },
       });
+
       const products = await response.json();
       const tbody = document.getElementById("product-body");
       tbody.innerHTML = "";
+
       products.forEach((p) => {
+        const imageHtml = p.imageUrl
+          ? `<img src="http://localhost:8081${p.imageUrl}" width="100"/>`
+          : "No Image";
+
         const row = `<tr>
           <td>${p.id}</td>
           <td>${p.name}</td>
           <td>${p.description}</td>
           <td>${p.price}</td>
+          <td>${imageHtml}</td>
         </tr>`;
         tbody.innerHTML += row;
       });
@@ -62,8 +71,9 @@
       const name = document.getElementById("name").value;
       const description = document.getElementById("description").value;
       const price = parseFloat(document.getElementById("price").value);
+      const imageFile = document.getElementById("image").files[0];
 
-      const response = await fetch("http://localhost:8081/api/admin/products/add", {
+      const productResponse = await fetch("http://localhost:8081/api/admin/products/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -74,14 +84,34 @@
 
       const message = document.getElementById("message");
 
-      if (response.ok) {
-        message.textContent = "Product added successfully.";
+      if (!productResponse.ok) {
+        message.textContent = "Failed to add product.";
+        return;
+      }
+
+      const product = await productResponse.json(); 
+      const productId = product.id;
+
+      const formData = new FormData();
+      formData.append("file", imageFile);
+
+      const imageResponse = await fetch(`http://localhost:8081/api/admin/product-image/${productId}`, {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+        body: formData,
+      });
+
+      if (imageResponse.ok) {
+        message.textContent = "Product and image uploaded successfully.";
         loadProducts();
       } else {
-        message.textContent = "Failed to add product.";
+        message.textContent = "Product saved but image upload failed.";
       }
     });
 
+    // İlk yükleme
     loadProducts();
   </script>
 </body>

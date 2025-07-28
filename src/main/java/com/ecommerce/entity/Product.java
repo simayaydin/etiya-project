@@ -25,8 +25,6 @@ public class Product {
 
     private int stock;
 
-    private String imageUrl;
-
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;

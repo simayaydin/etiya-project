@@ -58,14 +58,19 @@
   <h2>User List</h2>
   <table>
     <thead>
-      <tr>
-        <th>ID</th>
-        <th>Username</th>
-        <th>Email</th>
-        <th>Role</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
+  <tr>
+    <th>ID</th>
+    <th>Username</th>
+    <th>First Name</th>
+    <th>Last Name</th>
+    <th>Email</th>
+    <th>Phone</th>
+    <th>Birth Date</th>
+    <th>Role</th>
+    <th>Actions</th>
+  </tr>
+</thead>
+
     <tbody id="user-body">
       <!-- Data loads here -->
     </tbody>
@@ -95,11 +100,16 @@
             <tr>
               <td>${user.id}</td>
               <td>${user.username}</td>
+              <td>${user.firstName || "-"}</td>
+              <td>${user.lastName || "-"}</td>
               <td>${user.email}</td>
+              <td>${user.phone || "-"}</td>
+              <td>${user.birthDate || "-"}</td>
               <td>${user.role}</td>
               <td><button onclick="deleteUser(${user.id})">Delete</button></td>
             </tr>
           `;
+
           tbody.innerHTML += row;
         });
       } else {
