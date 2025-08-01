@@ -24,6 +24,10 @@ public class Product {
     private BigDecimal price;
 
     private int stock;
+    
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     private LocalDateTime createdAt;
 

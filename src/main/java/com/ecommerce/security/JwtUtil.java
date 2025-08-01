@@ -4,6 +4,7 @@ import com.ecommerce.entity.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.Claims;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -14,9 +15,8 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
-    private final String SECRET = "my-secret-key";
+    private final String secret = System.getProperty("JWT_SECRET");
 
-    // Generate JWT Token
     public String generateToken(User user) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", "ROLE_" + user.getRole().toUpperCase());
@@ -25,17 +25,15 @@ public class JwtUtil {
                 .setClaims(claims)
                 .setSubject(user.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
-                .signWith(SignatureAlgorithm.HS256, SECRET)
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 saat
+                .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
     }
 
-    // Extract username
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-    // Extract role
     public String extractRole(String token) {
         return (String) extractAllClaims(token).get("role");
     }
@@ -47,7 +45,7 @@ public class JwtUtil {
 
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
-                .setSigningKey(SECRET)
+                .setSigningKey(secret)
                 .parseClaimsJws(token)
                 .getBody();
     }

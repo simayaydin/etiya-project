@@ -35,5 +35,11 @@ public class PageController {
     return "admin_users";
     }
 
+    @GetMapping("/admin/categories")
+    public String showCategoryPage() {
+    return "admin_category"; 
+    }
+
+
 
 }
