@@ -144,30 +144,26 @@
 
 
     </dependencies>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.owasp</groupId>
-                <artifactId>dependency-check-maven</artifactId>
-                <version>8.3.1</version>
-                <executions>
-                    <execution>
-                    <goals>
-                        <goal>check</goal>
-                    </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <!-- Kritik seviyedeki açıklardan dolayı build'in başarısız olmasını sağlar -->
-                    <failBuildOnCVSS>7</failBuildOnCVSS>
-
-                    <!-- HTML, XML, JSON gibi tüm formatlarda çıktı al -->
-                    <format>ALL</format>
-
-                    <!-- Raporların yer alacağı dizin -->
-                    <outputDirectory>${project.build.directory}</outputDirectory>
-                </configuration>
+        <build>
+            <plugins>
+                <plugin>
+            <groupId>org.owasp</groupId>
+            <artifactId>dependency-check-maven</artifactId>
+            <version>8.3.1</version> <!-- veya 8.4.0 -->
+            <executions>
+                <execution>
+                <goals>
+                    <goal>check</goal>
+                </goals>
+                </execution>
+            </executions>
+            <configuration>
+                <failBuildOnCVSS>7</failBuildOnCVSS>
+                <format>JSON,XML</format> <!-- HTML hariç -->
+                <outputDirectory>${project.build.directory}</outputDirectory>
+            </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

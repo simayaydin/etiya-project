@@ -39,7 +39,6 @@ jobs:
       with:
         name: dependency-check-reports
         path: |
-          target/dependency-check-report.html
           target/dependency-check-report.xml
           target/dependency-check-report.json
 
