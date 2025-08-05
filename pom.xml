@@ -149,7 +149,7 @@
                 <plugin>
             <groupId>org.owasp</groupId>
             <artifactId>dependency-check-maven</artifactId>
-            <version>8.3.1</version> <!-- veya 8.4.0 -->
+            <version>8.3.1</version>
             <executions>
                 <execution>
                 <goals>
@@ -159,7 +159,7 @@
             </executions>
             <configuration>
                 <failBuildOnCVSS>7</failBuildOnCVSS>
-                <format>JSON,XML</format> <!-- HTML hariç -->
+                <format>JSON</format>
                 <outputDirectory>${project.build.directory}</outputDirectory>
             </configuration>
             </plugin>
