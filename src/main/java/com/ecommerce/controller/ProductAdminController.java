@@ -8,6 +8,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 import java.util.List;
 
 @RestController
@@ -22,6 +26,17 @@ public class ProductAdminController {
         List<ProductResponse> products = productService.getAllProductsForAdmin();
         return ResponseEntity.ok(products);
     }
+
+    @Operation(
+    summary = "Add a new product",
+    description = "Creates a new product. Admin role required. Fields: name, description, price, categoryId"
+)
+@ApiResponses(value = {
+    @ApiResponse(responseCode = "200", description = "Product created successfully"),
+    @ApiResponse(responseCode = "400", description = "Invalid input data"),
+    @ApiResponse(responseCode = "403", description = "Access denied (Admin role required)"),
+    @ApiResponse(responseCode = "500", description = "Internal server error while creating product")
+})
 
     @PostMapping("/add")
     public ResponseEntity<ProductResponse> addProduct(@Valid @RequestBody ProductRequest request) {
