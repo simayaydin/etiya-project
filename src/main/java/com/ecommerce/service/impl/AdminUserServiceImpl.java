@@ -1,31 +1,48 @@
 package com.ecommerce.service.impl;
 
-import com.ecommerce.entity.User;
+import com.ecommerce.dto.ApiResponse;
+import com.ecommerce.dto.UserResponse;
 import com.ecommerce.repository.UserRepository;
 import com.ecommerce.service.AdminUserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class AdminUserServiceImpl implements AdminUserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserResponse> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(user -> UserResponse.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .role(user.getRole())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .phone(user.getPhone())
+                .birthDate(user.getBirthDate())
+                .build()
+                )
+                .collect(Collectors.toList());
     }
 
     @Override
-    public ResponseEntity<String> deleteUser(Long id) {
+    public ResponseEntity<ApiResponse> deleteUser(Long id) {
         if (!userRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(404)
+                    .body(new ApiResponse("User not found", false));
         }
+
         userRepository.deleteById(id);
-        return ResponseEntity.ok("User deleted successfully");
+        return ResponseEntity.ok(new ApiResponse("User deleted successfully", true));
     }
 }

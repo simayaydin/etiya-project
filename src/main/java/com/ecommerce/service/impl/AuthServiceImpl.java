@@ -1,5 +1,8 @@
 package com.ecommerce.service.impl;
 
+import com.ecommerce.dto.AuthResponse;
+import com.ecommerce.dto.LoginRequest;
+import com.ecommerce.dto.RegisterRequest;
 import com.ecommerce.entity.User;
 import com.ecommerce.repository.UserRepository;
 import com.ecommerce.security.JwtUtil;
@@ -7,13 +10,10 @@ import com.ecommerce.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -27,34 +27,42 @@ public class AuthServiceImpl implements AuthService {
     private static final Logger logger = LogManager.getLogger(AuthServiceImpl.class);
 
     @Override
-    public ResponseEntity<?> register(User user) {
-        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
-            return ResponseEntity.badRequest().body("This user is already used.");
+    public AuthResponse register(RegisterRequest request) {
+        if (userRepository.findByUsername(request.getUsername()).isPresent()) {
+            throw new RuntimeException("Username already taken");
         }
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        User user = new User();
+        user.setUsername(request.getUsername());
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole("USER");
+
         userRepository.save(user);
-        return ResponseEntity.ok("Registration Successful!");
+
+        String token = jwtUtil.generateToken(user);
+
+        logger.info("User registered: {}", user.getUsername());
+
+        return new AuthResponse(token, "ROLE_USER");
     }
 
     @Override
-    public ResponseEntity<?> login(Map<String, String> loginData) {
-        String username = loginData.get("username");
-        String password = loginData.get("password");
-
+    public AuthResponse login(LoginRequest request) {
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(username, password)
+                new UsernamePasswordAuthenticationToken(
+                        request.getUsername(),
+                        request.getPassword()
+                )
         );
 
-        User user = userRepository.findByUsername(username)
+        User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         String token = jwtUtil.generateToken(user);
 
-        return ResponseEntity.ok(Map.of(
-                "token", token,
-                "role", "ROLE_" + user.getRole().toUpperCase()
-        ));
+        logger.info("User logged in: {}", user.getUsername());
+
+        return new AuthResponse(token, "ROLE_" + user.getRole().toUpperCase());
     }
 }

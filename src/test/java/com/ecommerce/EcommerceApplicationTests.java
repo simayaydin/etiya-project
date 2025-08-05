@@ -9,9 +9,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class EcommerceApplicationTests {
 
     @BeforeAll
-    public static void setup() {
-        DotenvLoader.loadEnv();  //Test başlamadan .env yükleniyor
+public static void setup() {
+    try {
+        DotenvLoader.loadEnv();  // Optional loading
+    } catch (Exception e) {
+        System.out.println("Dotenv could not be loaded in CI environment: " + e.getMessage());
     }
+}
 
     @Test
     void contextLoads() {

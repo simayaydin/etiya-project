@@ -1,11 +1,10 @@
 package com.ecommerce.service;
 
-import com.ecommerce.entity.User;
-import org.springframework.http.ResponseEntity;
-
-import java.util.Map;
+import com.ecommerce.dto.LoginRequest;
+import com.ecommerce.dto.RegisterRequest;
+import com.ecommerce.dto.AuthResponse;
 
 public interface AuthService {
-    ResponseEntity<?> register(User user);
-    ResponseEntity<?> login(Map<String, String> loginData);
+    AuthResponse register(RegisterRequest request);
+    AuthResponse login(LoginRequest request);
 }
