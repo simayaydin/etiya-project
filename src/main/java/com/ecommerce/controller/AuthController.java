@@ -14,12 +14,27 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
+/**
+ * Authentication controller that handles user registration and login operations.
+ * @author simayaydin
+ */
+
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
     private final AuthService authService;
+
+    /**
+     * Registers a new user in the system.
+     * 
+     * @param request RegisterRequest object containing:
+     *                - username: the desired username
+     *                - email: user's email address
+     *                - password: user's password
+     * @return ResponseEntity containing AuthResponse with JWT token
+     */
     
     @Operation(
     summary = "Register new user",
@@ -35,6 +50,16 @@ public class AuthController {
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
         return ResponseEntity.ok(authService.register(request));
     }
+
+    /**
+     * Authenticates a user and generates JWT token.
+     * 
+     * @param request LoginRequest object containing:
+     *                - username: user's username
+     *                - password: user's password
+     * @return ResponseEntity containing AuthResponse with JWT token
+     */
+
     @Operation(
     summary = "Login",
     description = "Authenticate user with username and password. Returns JWT token on success."
