@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.junit.jupiter.api.Disabled;
 
 @SpringBootTest
-@Disabled("CI/CD için context yükleme testi geçici olarak devre dışı bırakıldı")
+@Disabled("CI/CD için context yükleme testi geçici olarak devre disi birakildi")
 public class EcommerceApplicationTests {
 
     @BeforeAll
