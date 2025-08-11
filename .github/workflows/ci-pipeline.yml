@@ -6,9 +6,15 @@ on:
   pull_request:
     branches: [ "main" ]
 
+# Top-level env: tüm job'larca görülsün
+env:
+  NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Aynı ref için eşzamanlı DC çalışmasın (rate-limit koruması)
+    concurrency: dc-${{ github.ref }}
 
     steps:
       - name: Checkout code
@@ -21,24 +27,27 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
-      - name: Purge OWASP DC cached data (prevent stale local data)
-        run: |
-          rm -rf ~/.m2/repository/org/owasp/dependency-check-data || true
+      # NVD yerel verisini sakla (build'ler arası yeniden kullan)
+      - name: Restore Dependency-Check data cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.m2/repository/org/owasp/dependency-check-data
+          key: dc-data-${{ runner.os }}
+
+      # Purge adımı artık gerekli değil; cache kullanıyoruz
+      # - name: Purge OWASP DC cached data (prevent stale local data)
+      #   run: rm -rf ~/.m2/repository/org/owasp/dependency-check-data || true
 
       - name: OWASP Dependency-Check (with NVD API key)
-        env:
-          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
         run: |
-          # (Güvenli doğrulama) Key uzunluğu gelsin diye sadece karakter sayisini yazdiriyoruz
           echo "NVD_API_KEY length: ${#NVD_API_KEY}"
-
+          # Plugin config pom.xml'de; burada -DnvdApiKey geçmiyoruz.
+          # Debug görmek istersen mvn -X kullanabilirsin.
           mvn -Pprod -DskipTests \
-              -DnvdApiKey="${NVD_API_KEY}" \
-              -Danalyzer.knownExploitedVulnerabilities.enabled=false \
-              org.owasp:dependency-check-maven:check
+              clean verify org.owasp:dependency-check-maven:check
+        # Geçici: DC stabil olana kadar pipeline'ı kırmasın
         continue-on-error: true
 
-      # Rapor oluştuysa yükle (yoksa sessizce atla)
       - name: Upload OWASP Dependency Check Reports
         if: ${{ hashFiles('**/target/dependency-check-report.json') != '' }}
         uses: actions/upload-artifact@v4
@@ -62,3 +71,11 @@ jobs:
         with:
           name: spring-boot-app
           path: target/*.jar
+
+      # Build sonunda NVD verisini cache'e geri yaz
+      - name: Save Dependency-Check data cache
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: ~/.m2/repository/org/owasp/dependency-check-data
+          key: dc-data-${{ runner.os }}
