@@ -13,7 +13,6 @@ It supports both admin and user roles, offering functionality such as product ma
 - **User Authentication & Authorization:** Registration, login, JWT-based security, password reset via email.
 - **Admin Panel:** Manage products, categories, and users with secure RESTful endpoints.
 - **Product & Category Management:** CRUD operations for products and categories.
-- **Cart & Order System:** Add products to cart, checkout, and order management.
 - **Email Integration:** SMTP-based password reset and notifications.
 - **Logging & Auditing:** Log4j2 integration for detailed application logs.
 - **API Documentation:** Interactive Swagger UI and OpenAPI documentation.
@@ -98,7 +97,7 @@ It supports both admin and user roles, offering functionality such as product ma
 
 5. **Access the application:**
    - Web UI: `http://localhost:8081`
-   - Swagger UI: `http://localhost:8081/swagger-ui.html` or `/swagger-ui/`
+   - Swagger UI: `http://localhost:8081/swagger-ui.html`
 
 ---
 
