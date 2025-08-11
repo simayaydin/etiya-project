@@ -19,20 +19,12 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: 'maven'   # Maven cache
+          cache: 'maven'
 
-      # Dependency-Check veritabanı cache'i, hız için
-      - name: Cache OWASP DC data
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2/repository/org/owasp/dependency-check-data
-          key: dc-${{ runner.os }}-v1
-
-      # Build (prod profili: KEV kapalı; testler atlanabilir)
       - name: Build with Maven (prod profile)
         run: mvn -Pprod -DskipTests clean verify
 
-      # OWASP Dependency-Check (KEV kapalı; hata verirse pipeline düşmesin)
+      # OWASP çalışsın ama hata pipeline'ı kırmasın
       - name: OWASP Dependency-Check
         run: |
           mvn -Pprod -DskipTests \
@@ -40,8 +32,8 @@ jobs:
               org.owasp:dependency-check-maven:check
         continue-on-error: true
 
-      # Rapor varsa yükle (yoksa adım atlanır)
-      - name: Upload OWASP Dependency-Check Reports
+      # Rapor oluştuysa yükle (yoksa sessizce atla)
+      - name: Upload OWASP Dependency Check Reports
         if: ${{ hashFiles('**/target/dependency-check-report.json') != '' }}
         uses: actions/upload-artifact@v4
         with:
@@ -50,7 +42,6 @@ jobs:
             **/target/dependency-check-report.json
             **/target/dependency-check-report.html
 
-      # SonarCloud analizi (prod profili)
       - name: SonarCloud Scan
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -61,7 +52,6 @@ jobs:
           -Dsonar.host.url=https://sonarcloud.io
           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
-      # .jar çıktısını yükle
       - name: Upload build artifact (.jar)
         uses: actions/upload-artifact@v4
         with:
