@@ -187,11 +187,13 @@
                 <artifactId>dependency-check-maven</artifactId>
                 <version>9.2.0</version>
                <configuration>
+                    <nvdApiKey>${env.NVD_API_KEY}</nvdApiKey>
                     <formats>JSON</formats>
                     <outputDirectory>${project.build.directory}</outputDirectory>
                     <analyzerKnownExploitedVulnerabilitiesEnabled>
                         ${analyzer.knownExploitedVulnerabilities.enabled}
                     </analyzerKnownExploitedVulnerabilitiesEnabled>
+                    <nvdApiKey>${env.NVD_API_KEY}</nvdApiKey>
             </configuration>
                 <executions>
                     <execution>

@@ -24,12 +24,13 @@ jobs:
       - name: Build with Maven (prod profile)
         run: mvn -Pprod -DskipTests clean verify
 
-      # OWASP çalışsın ama hata pipeline'ı kırmasın
-      - name: OWASP Dependency-Check
+      - name: OWASP Dependency-Check (with NVD API key)
+        env:
+          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
         run: |
           mvn -Pprod -DskipTests \
-              -Danalyzer.knownExploitedVulnerabilities.enabled=false \
-              org.owasp:dependency-check-maven:check
+            -Danalyzer.knownExploitedVulnerabilities.enabled=false \
+            org.owasp:dependency-check-maven:check
         continue-on-error: true
 
       # Rapor oluştuysa yükle (yoksa sessizce atla)
